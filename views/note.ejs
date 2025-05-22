@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %> - Updated Notes App</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .back-link::before {
+            content: '←';
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">Back to Kala Notes</a>
+    <h1><%= title %></h1>
+    <div class="content">
+        <%= content %>
+    </div>
+</body>
+</html>
