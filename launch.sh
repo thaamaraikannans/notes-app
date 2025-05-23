@@ -32,7 +32,7 @@ sudo service codedeploy-agent start
 
 cd /home/ec2-user
 # Clone the repository
-git clone https://thaamaraikannans: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@github.com/thaamaraikannans/notes-app.git
+git clone https://github.com/thaamaraikannans/notes-app.git
 
 cd notes-app
 # Install the dependencies
