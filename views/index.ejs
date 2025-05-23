@@ -144,16 +144,20 @@
     </div>
 
     <h2>Your Notes</h2>
-    <ul class="note-list">
-        <% notes.forEach(note => { %>
-            <li class="note-item">
-                <span class="delete-btn" onclick="deleteNote('<%= note.title %>')">❌</span>
-                <h3><a href="/notes/<%= note.title %>"><%= note.title %></a></h3>
-                <p><%= note.content.substring(0, 100) %>...</p>
-                <small>Created: <%= note.createdAt.toLocaleDateString() %></small>
-            </li>
-        <% }); %>
-    </ul>
+   <ul class="note-list">
+    <% notes.forEach(note => { %>
+        <li class="note-item">
+            <span class="delete-btn" onclick="deleteNote('<%= note.title %>')">❌</span>
+            <h3><a href="/notes/<%= note.title %>"><%= note.title %></a></h3>
+            <p>
+                <%= note.content.length > 100 ? note.content.substring(0, 100) + '...' : note.content %>
+            </p>
+            <small>
+                Created: <%= new Date(note.createdAt).toLocaleDateString() %>
+            </small>
+        </li>
+    <% }); %>
+</ul>
 
     <script>
         function deleteNote(title) {

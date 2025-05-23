@@ -4,50 +4,57 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
-// Set EJS as templating engine
 app.set('view engine', 'ejs');
-
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Ensure notes directory exists
-const notesDir = path.join(__dirname, 'notes');
-if (!fs.existsSync(notesDir)) {
-    fs.mkdirSync(notesDir);
+const notesFile = path.join(__dirname, 'notes.json');
+
+// Ensure notes.json exists
+if (!fs.existsSync(notesFile)) {
+    fs.writeFileSync(notesFile, JSON.stringify([]));
+}
+
+// Helper to read notes
+function readNotes() {
+    return JSON.parse(fs.readFileSync(notesFile, 'utf8'));
+}
+
+// Helper to write notes
+function writeNotes(notes) {
+    fs.writeFileSync(notesFile, JSON.stringify(notes, null, 2));
 }
 
 // Routes
 app.get('/', (req, res) => {
-    const notes = fs.readdirSync(notesDir)
-        .filter(file => file.endsWith('.txt'))
-        .map(file => {
-            const content = fs.readFileSync(path.join(notesDir, file), 'utf8');
-            return {
-                title: file.replace('.txt', ''),
-                content: content,
-                createdAt: fs.statSync(path.join(notesDir, file)).birthtime
-            };
-        });
+    const notes = readNotes();
     res.render('index', { notes });
 });
 
 app.post('/notes', (req, res) => {
     const { title, content } = req.body;
-    const fileName = `${title.replace(/[^a-z0-9]/gi, '_')}.txt`;
-    fs.writeFileSync(path.join(notesDir, fileName), content);
+    const notes = readNotes();
+    const note = {
+        title,
+        content,
+        createdAt: new Date()
+    };
+    notes.push(note);
+    writeNotes(notes);
     res.redirect('/');
 });
 
 app.get('/notes/:title', (req, res) => {
-    const fileName = `${req.params.title}.txt`;
-    const content = fs.readFileSync(path.join(notesDir, fileName), 'utf8');
-    res.render('note', { title: req.params.title, content });
+    const notes = readNotes();
+    const note = notes.find(n => n.title === req.params.title);
+    if (!note) return res.status(404).send('Note not found');
+    res.render('note', note);
 });
 
 app.delete('/notes/:title', (req, res) => {
-    const fileName = `${req.params.title}.txt`;
-    fs.unlinkSync(path.join(notesDir, fileName));
+    let notes = readNotes();
+    notes = notes.filter(n => n.title !== req.params.title);
+    writeNotes(notes);
     res.sendStatus(200);
 });
 
