@@ -32,14 +32,17 @@ sudo service codedeploy-agent start
 
 cd /home/ec2-user
 # Clone the repository
-git clone https://thaamaraikannans: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@github.com/thaamaraikannans/notes-app.git
+git clone https://thaamaraikannans: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@github.com/thaamaraikannans/notes-app.git
 
 cd notes-app
 # Install the dependencies
 npm install
 
 # Configure nginx
-sudo cp /home/ec2-user/notes-app/nodejs.conf /etc/nginx/conf.d/nodejs.conf
+sudo rm -rf /etc/nginx/nginx.conf
+sudo rm -rf /etc/nginx/conf.d
+sudo cp /home/ec2-user/notes-app/nginx.conf /etc/nginx/nginx.conf
+sudo cp -r /home/ec2-user/notes-app/conf.d /etc/nginx/
 
 # start the application and restart nginx
 pm2 start index.js
